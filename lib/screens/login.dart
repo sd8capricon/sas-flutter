@@ -14,13 +14,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  var usernameController = TextEditingController();
+  var passwordController = TextEditingController();
   var loginErr = '';
 
   void login() async {
     final prefs = await SharedPreferences.getInstance();
-    var url = Uri.parse('http://192.168.0.5:8000/login/');
+    var url = Uri.parse('http://192.168.0.6:8000/login/');
     var res = await http.post(url, body: {
       "username": usernameController.text,
       "password": passwordController.text

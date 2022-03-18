@@ -3,6 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+class AlreadyExists implements Exception {
+  String cause;
+  AlreadyExists(this.cause);
+}
+
 class CreateAttendance extends StatefulWidget {
   const CreateAttendance({Key? key}) : super(key: key);
 
@@ -11,25 +16,36 @@ class CreateAttendance extends StatefulWidget {
 }
 
 class _CreateAttendanceState extends State<CreateAttendance> {
-  List body = [];
+  var lecController = TextEditingController();
+  List studentList = [];
   List absentStudents = [];
 
   void getStudents() async {
-    final url = Uri.parse('http://192.168.0.5:8000/students');
-    var res = await http.get(url);
-    setState(() {
-      body = jsonDecode(res.body);
-      // body = jsonDecode(res.body)["enrolled_students"]
-      for (var item in body) {
-        item['student_status'] = true;
-      }
-    });
+    String message = '';
+    final url = Uri.parse('http://192.168.0.6:8000/students');
+    try {
+      var students = await http.get(url);
+      setState(() {
+        studentList = jsonDecode(students.body);
+        // body = jsonDecode(res.body)["enrolled_students"]
+        for (var item in studentList) {
+          item['student_status'] = true;
+        }
+      });
+    } on Exception catch (e) {
+      message = 'Error Getting Students';
+      final snackBar = SnackBar(
+        content: Text(message),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
-  void mark() {
+  void mark() async {
+    String message = '';
     absentStudents = [];
     List temp = [];
-    for (var item in body) {
+    for (var item in studentList) {
       bool stat = item['student_status'];
       if (stat == false) {
         var data = {
@@ -42,11 +58,43 @@ class _CreateAttendanceState extends State<CreateAttendance> {
     setState(() {
       absentStudents = temp;
     });
-    if (absentStudents.isNotEmpty) {
-      // TODO: write logic to post server
-      print(absentStudents);
-      print('make http post req here');
+    try {
+      int currLec = int.parse(lecController.text);
+      final url = Uri.parse('http://192.168.0.6:8000/get-last-lec/1/');
+      final res = await http.get(url);
+      switch (res.statusCode) {
+        case 400:
+          throw Exception("Status Code 400");
+      }
+      var lastLec = jsonDecode(res.body)['last_lec'];
+      if (currLec < lastLec) {
+        throw AlreadyExists('cause');
+      }
+      if (currLec > lastLec) {
+        final url =
+            Uri.parse('http://192.168.0.6:8000/attendance/0/${currLec}/');
+        final req = await http.post(url,
+            headers: {'Content-type': 'application/json'},
+            body: jsonEncode(absentStudents));
+        switch (req.statusCode) {
+          case 400:
+            throw Exception("Status Code 400");
+        }
+      }
+      message = 'Successfully Marked Attendance';
+    } on AlreadyExists catch (e) {
+      message = 'Lecture already marked';
+    } on FormatException catch (e) {
+      message = 'Lecture Number cannot be empty';
+    } on Exception catch (e) {
+      message = 'Error Marking Attendance';
     }
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -62,23 +110,37 @@ class _CreateAttendanceState extends State<CreateAttendance> {
         title: const Text('Mark Attendance'),
       ),
       body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Enter Lecture Number: '),
+                SizedBox(
+                  width: 50,
+                  child: TextField(
+                    controller: lecController,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
             ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: body.length,
+              itemCount: studentList.length,
               itemBuilder: (context, item) {
                 return CheckboxListTile(
-                  title: Text(body[item]['roll_no'].toString() +
+                  title: Text(studentList[item]['roll_no'].toString() +
                       " " +
-                      body[item]['f_name'] +
+                      studentList[item]['f_name'] +
                       " " +
-                      body[item]['l_name']),
-                  value: !body[item]['student_status'],
+                      studentList[item]['l_name']),
+                  value: !studentList[item]['student_status'],
                   onChanged: (val) {
                     setState(() {
-                      body[item]['student_status'] = !val!;
+                      studentList[item]['student_status'] = !val!;
                     });
                   },
                 );
@@ -88,9 +150,6 @@ class _CreateAttendanceState extends State<CreateAttendance> {
               onPressed: mark,
               child: const Text('Mark'),
             ),
-            Text(absentStudents.isNotEmpty
-                ? absentStudents.toString()
-                : 'Empty List'),
           ],
         ),
         padding: const EdgeInsets.all(10),
