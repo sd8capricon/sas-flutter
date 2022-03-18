@@ -1,4 +1,7 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'dart:convert';
+import 'package:sas/variables.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,12 +25,11 @@ class _CreateAttendanceState extends State<CreateAttendance> {
 
   void getStudents() async {
     String message = '';
-    final url = Uri.parse('http://192.168.0.6:8000/students');
+    final url = Uri.parse('$host/students');
     try {
       var students = await http.get(url);
       setState(() {
         studentList = jsonDecode(students.body);
-        // body = jsonDecode(res.body)["enrolled_students"]
         for (var item in studentList) {
           item['student_status'] = true;
         }
@@ -60,7 +62,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
     });
     try {
       int currLec = int.parse(lecController.text);
-      final url = Uri.parse('http://192.168.0.6:8000/get-last-lec/1/');
+      final url = Uri.parse('$host/get-last-lec/1/');
       final res = await http.get(url);
       switch (res.statusCode) {
         case 400:
@@ -71,8 +73,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
         throw AlreadyExists('cause');
       }
       if (currLec > lastLec) {
-        final url =
-            Uri.parse('http://192.168.0.6:8000/attendance/0/${currLec}/');
+        final url = Uri.parse('$host/attendance/0/$currLec/');
         final req = await http.post(url,
             headers: {'Content-type': 'application/json'},
             body: jsonEncode(absentStudents));

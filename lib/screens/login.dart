@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:sas/variables.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +21,7 @@ class _LoginState extends State<Login> {
 
   void login() async {
     final prefs = await SharedPreferences.getInstance();
+    // var url = Uri.parse('$host/login/');
     var url = Uri.parse('http://192.168.0.6:8000/login/');
     var res = await http.post(url, body: {
       "username": usernameController.text,
@@ -35,7 +37,9 @@ class _LoginState extends State<Login> {
         loginErr = '';
       });
       var token = body['token'];
+      var courseId = body['course_taught'];
       prefs.setString('token', token);
+      if (courseId != null) prefs.setInt('course_id', courseId);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const Home(),
