@@ -1,10 +1,9 @@
-// ignore_for_file: unnecessary_brace_in_string_interps
-
 import 'dart:convert';
 import 'package:sas/variables.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AlreadyExists implements Exception {
   String cause;
@@ -20,8 +19,18 @@ class CreateAttendance extends StatefulWidget {
 
 class _CreateAttendanceState extends State<CreateAttendance> {
   var lecController = TextEditingController();
+  int courseId = 0;
   List studentList = [];
   List absentStudents = [];
+
+  void getLocalStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (prefs.getInt('course_id') != null) {
+        courseId = prefs.getInt('course_id')!;
+      }
+    });
+  }
 
   void getStudents() async {
     String message = '';
@@ -73,7 +82,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
         throw AlreadyExists('cause');
       }
       if (currLec > lastLec) {
-        final url = Uri.parse('$host/attendance/0/$currLec/');
+        final url = Uri.parse('$host/attendance/$courseId/$currLec/');
         final req = await http.post(url,
             headers: {'Content-type': 'application/json'},
             body: jsonEncode(absentStudents));
@@ -101,6 +110,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
   @override
   void initState() {
     super.initState();
+    getLocalStorage();
     getStudents();
   }
 

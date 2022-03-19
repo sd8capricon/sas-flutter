@@ -21,8 +21,7 @@ class _LoginState extends State<Login> {
 
   void login() async {
     final prefs = await SharedPreferences.getInstance();
-    // var url = Uri.parse('$host/login/');
-    var url = Uri.parse('http://192.168.0.6:8000/login/');
+    var url = Uri.parse('$host/login/');
     var res = await http.post(url, body: {
       "username": usernameController.text,
       "password": passwordController.text
@@ -33,12 +32,12 @@ class _LoginState extends State<Login> {
         loginErr = 'Incorrect Username or Password';
       });
     } else {
-      setState(() {
-        loginErr = '';
-      });
+      var teacher = body['teacher'];
       var token = body['token'];
       var courseId = body['course_taught'];
       prefs.setString('token', token);
+      prefs.setString('teacher', jsonEncode(teacher));
+      prefs.remove('course_id');
       if (courseId != null) prefs.setInt('course_id', courseId);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
