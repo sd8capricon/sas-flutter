@@ -60,13 +60,18 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void editAttendance() {
-    Navigator.push(
+  void editAttendance() async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const EditAttendance(),
       ),
     );
+    if (result != null) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('$result')));
+    }
   }
 
   void logOut() async {

@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Screens
+import 'home.dart';
+
 class EditAttendance extends StatefulWidget {
   const EditAttendance({Key? key}) : super(key: key);
 
@@ -40,10 +43,20 @@ class _EditAttendanceState extends State<EditAttendance> {
     }
     final url = Uri.parse('$host/course-lec-stats/$idTemp');
     final res = await http.get(url);
+    switch (res.statusCode) {
+      case 400:
+        Navigator.pop(context, 'Err');
+        break;
+      default:
+    }
     final body = jsonDecode(res.body);
+    if (body['num_lecs'] == null) {
+      Navigator.pop(context, 'No Lectures to edit');
+      return;
+    }
     final lecData = body['lec_stats'];
     setState(() {
-      lecsInt = body['num_lecs'];
+      lecsInt = body['num_lecs'] ?? 0;
       courseId = idTemp;
       for (var lec in lecData) {
         var tempDate = DateTime.tryParse(lec['date']);
@@ -54,7 +67,6 @@ class _EditAttendanceState extends State<EditAttendance> {
         lecs.add(data);
       }
     });
-    print(lecs[1]['date'].runtimeType);
     getAttendance();
   }
 
