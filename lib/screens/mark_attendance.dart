@@ -24,10 +24,10 @@ class _CreateAttendanceState extends State<CreateAttendance> {
   List absentStudents = [];
 
   void getLocalStorage() async {
-    final prefs = await SharedPreferences.getInstance();
+    final localStorage = await SharedPreferences.getInstance();
     setState(() {
-      if (prefs.getInt('course_id') != null) {
-        courseId = prefs.getInt('course_id')!;
+      if (localStorage.getInt('course_id') != null) {
+        courseId = localStorage.getInt('course_id')!;
       }
     });
   }
@@ -75,7 +75,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
       final res = await http.get(url);
       switch (res.statusCode) {
         case 400:
-          throw Exception("Status Code 400");
+          throw Exception("Status Code 400 last lec");
       }
       var lastLec = jsonDecode(res.body)['last_lec'];
       if (currLec < lastLec) {
@@ -97,6 +97,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
     } on FormatException catch (e) {
       message = 'Lecture Number cannot be empty';
     } on Exception catch (e) {
+      print(e);
       message = 'Error Marking Attendance';
     }
     final snackBar = SnackBar(

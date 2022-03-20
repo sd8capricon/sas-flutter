@@ -1,8 +1,13 @@
 import 'dart:convert';
+
+// Packages
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Screens
 import 'login.dart';
 import 'mark_attendance.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'edit_attendance.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,7 +25,9 @@ class _HomeState extends State<Home> {
     final prefs = await SharedPreferences.getInstance();
     if (teacher.isEmpty) {
       setState(() {
-        teacher = jsonDecode(prefs.getString('teacher').toString()) as Map;
+        if (prefs.getString('teacher') != null) {
+          teacher = jsonDecode(prefs.getString('teacher').toString()) as Map;
+        }
         if (prefs.getInt('course_id') != null) {
           courseId = prefs.getInt('course_id')!;
         }
@@ -49,6 +56,15 @@ class _HomeState extends State<Home> {
       context,
       MaterialPageRoute(
         builder: (context) => const CreateAttendance(),
+      ),
+    );
+  }
+
+  void editAttendance() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const EditAttendance(),
       ),
     );
   }
@@ -85,9 +101,17 @@ class _HomeState extends State<Home> {
             children: [
               const Text('Home Page'),
               if (courseId > 0)
-                ElevatedButton(
-                  onPressed: createAttendance,
-                  child: const Text('Mark Attendance'),
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: createAttendance,
+                      child: const Text('Mark Attendance'),
+                    ),
+                    ElevatedButton(
+                      onPressed: editAttendance,
+                      child: const Text('Edit Attendance'),
+                    )
+                  ],
                 )
               else
                 const Text('No Course Assigned'),
