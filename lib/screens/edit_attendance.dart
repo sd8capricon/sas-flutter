@@ -3,6 +3,7 @@ import 'package:sas/variables.dart';
 
 // Packages
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,8 +17,9 @@ class EditAttendance extends StatefulWidget {
 class _EditAttendanceState extends State<EditAttendance> {
   int courseId = 0;
   int currLec = 1;
-  int lecs = 0;
+  int lecsInt = 0;
   String message = '';
+  List lecs = [0];
   List menuItems = [];
   List studentList = [];
   List changeStudents = [];
@@ -30,6 +32,7 @@ class _EditAttendanceState extends State<EditAttendance> {
   }
 
   void getStats() async {
+    final DateFormat formatter = DateFormat('dd-MM-yy');
     final localStorage = await SharedPreferences.getInstance();
     int idTemp = 0;
     if (localStorage.getInt('course_id') != null) {
@@ -38,10 +41,20 @@ class _EditAttendanceState extends State<EditAttendance> {
     final url = Uri.parse('$host/course-lec-stats/$idTemp');
     final res = await http.get(url);
     final body = jsonDecode(res.body);
+    final lecData = body['lec_stats'];
     setState(() {
-      lecs = body['num_lecs'];
+      lecsInt = body['num_lecs'];
       courseId = idTemp;
+      for (var lec in lecData) {
+        var tempDate = DateTime.tryParse(lec['date']);
+        var data = {
+          'lec_no': lec['lec_no'].toString(),
+          'date': formatter.format(tempDate!)
+        };
+        lecs.add(data);
+      }
     });
+    print(lecs[1]['date'].runtimeType);
     getAttendance();
   }
 
@@ -74,7 +87,6 @@ class _EditAttendanceState extends State<EditAttendance> {
       }
       message = 'Successfully Marked Attendance';
     } on Exception catch (e) {
-      print(e);
       message = 'Error Marking Attendance';
     }
     final snackBar = SnackBar(
@@ -100,12 +112,14 @@ class _EditAttendanceState extends State<EditAttendance> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text('Select: '),
               DropdownButton(
                 value: currLec,
                 items: [
-                  for (var i = 1; i <= lecs; i++)
+                  for (var i = 1; i <= lecsInt; i++)
                     DropdownMenuItem(
-                      child: Text(i.toString()),
+                      child: Text(
+                          'Lecture No: ${lecs[i]['lec_no']} Date: ${lecs[i]['date']}'),
                       value: i,
                     )
                 ],
