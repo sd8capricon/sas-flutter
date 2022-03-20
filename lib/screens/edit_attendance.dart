@@ -17,8 +17,10 @@ class _EditAttendanceState extends State<EditAttendance> {
   int courseId = 0;
   int currLec = 1;
   int lecs = 0;
+  String message = '';
   List menuItems = [];
   List studentList = [];
+  List changeStudents = [];
 
   void dropDownCallback(int? value) async {
     setState(() {
@@ -29,16 +31,16 @@ class _EditAttendanceState extends State<EditAttendance> {
 
   void getStats() async {
     final localStorage = await SharedPreferences.getInstance();
-    int id_temp = 0;
+    int idTemp = 0;
     if (localStorage.getInt('course_id') != null) {
-      id_temp = localStorage.getInt('course_id')!;
+      idTemp = localStorage.getInt('course_id')!;
     }
-    final url = Uri.parse('$host/course-lec-stats/$id_temp');
+    final url = Uri.parse('$host/course-lec-stats/$idTemp');
     final res = await http.get(url);
     final body = jsonDecode(res.body);
     setState(() {
       lecs = body['num_lecs'];
-      courseId = id_temp;
+      courseId = idTemp;
     });
     getAttendance();
   }
@@ -50,7 +52,35 @@ class _EditAttendanceState extends State<EditAttendance> {
     setState(() {
       studentList = students['attendance'];
     });
-    print(studentList[0]);
+  }
+
+  void mark() async {
+    List updateData = [];
+    for (var item in changeStudents) {
+      var data = {
+        'student_status': item['student_status'],
+        'student': item['student']['roll_no']
+      };
+      updateData.add(data);
+    }
+    try {
+      final url = Uri.parse('$host/attendance/$courseId/$currLec/');
+      final res = await http.patch(url,
+          headers: {'Content-type': 'application/json'},
+          body: jsonEncode(updateData));
+      switch (res.statusCode) {
+        case 400:
+          throw Exception("Status code 400");
+      }
+      message = 'Successfully Marked Attendance';
+    } on Exception catch (e) {
+      print(e);
+      message = 'Error Marking Attendance';
+    }
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -98,10 +128,19 @@ class _EditAttendanceState extends State<EditAttendance> {
                 onChanged: (val) {
                   setState(() {
                     studentList[item]['student_status'] = !val!;
+                    if (changeStudents.contains(studentList[item])) {
+                      changeStudents.remove(studentList[item]);
+                    } else {
+                      changeStudents.add(studentList[item]);
+                    }
                   });
                 },
               );
             },
+          ),
+          ElevatedButton(
+            onPressed: mark,
+            child: const Text('Mark'),
           ),
         ],
       ),

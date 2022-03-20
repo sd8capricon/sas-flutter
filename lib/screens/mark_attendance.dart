@@ -79,7 +79,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
           throw Exception("Status Code 400 last lec");
       }
       var lastLec = jsonDecode(res.body)['last_lec'];
-      if (currLec < lastLec) {
+      if (currLec <= lastLec) {
         throw AlreadyExists('cause');
       }
       if (currLec > lastLec) {
