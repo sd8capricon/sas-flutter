@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'mark_attendance.dart';
-import 'edit_attendance.dart';
+import 'package:sas/screens/attendance/mark_attendance.dart';
+import 'package:sas/screens/attendance/edit_attendance.dart';
 
 class Attendance extends StatefulWidget {
   const Attendance({Key? key}) : super(key: key);
@@ -14,22 +14,23 @@ class _AttendanceState extends State<Attendance> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 1,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Attendance'),
-          bottom: TabBar(
+          title: const Text('Attendance'),
+          bottom: const TabBar(
             tabs: [
               Tab(
                 text: 'Mark',
-              )
+              ),
+              Tab(
+                text: 'Edit',
+              ),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            Text('Hello World'),
-          ],
+        body: const TabBarView(
+          children: [CreateAttendance(), EditAttendance()],
         ),
       ),
     );

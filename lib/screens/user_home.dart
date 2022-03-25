@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Screens
-import 'package:sas/screens/attendance.dart';
 import 'login.dart';
-import 'mark_attendance.dart';
-import 'edit_attendance.dart';
+import 'package:sas/screens/attendance.dart';
+import 'package:sas/screens/attendance/mark_attendance.dart';
+import 'package:sas/screens/attendance/edit_attendance.dart';
 
 class UserHome extends StatefulWidget {
   const UserHome({Key? key}) : super(key: key);
@@ -119,14 +119,14 @@ class _UserHomeState extends State<UserHome> {
                       },
                       child: const Text('Attendance'),
                     ),
-                    ElevatedButton(
-                      onPressed: createAttendance,
-                      child: const Text('Mark Attendance'),
-                    ),
-                    ElevatedButton(
-                      onPressed: editAttendance,
-                      child: const Text('Edit Attendance'),
-                    )
+                    // ElevatedButton(
+                    //   onPressed: createAttendance,
+                    //   child: const Text('Mark Attendance'),
+                    // ),
+                    // ElevatedButton(
+                    //   onPressed: editAttendance,
+                    //   child: const Text('Edit Attendance'),
+                    // )
                   ],
                 )
               else

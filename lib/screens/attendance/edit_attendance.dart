@@ -115,61 +115,56 @@ class _EditAttendanceState extends State<EditAttendance> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Lecture Attendance'),
-      ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Select: '),
-              DropdownButton(
-                value: currLec,
-                items: [
-                  for (var i = 1; i <= lecsInt; i++)
-                    DropdownMenuItem(
-                      child: Text(
-                          'Lecture No: ${lecs[i]['lec_no']} Date: ${lecs[i]['date']}'),
-                      value: i,
-                    )
-                ],
-                onChanged: dropDownCallback,
-              ),
-            ],
-          ),
-          ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: studentList.length,
-            itemBuilder: (context, item) {
-              return CheckboxListTile(
-                title: Text(studentList[item]['student']['roll_no'].toString() +
-                    " " +
-                    studentList[item]['student']['f_name'] +
-                    " " +
-                    studentList[item]['student']['l_name']),
-                value: !studentList[item]['student_status'],
-                onChanged: (val) {
-                  setState(() {
-                    studentList[item]['student_status'] = !val!;
-                    if (changeStudents.contains(studentList[item])) {
-                      changeStudents.remove(studentList[item]);
-                    } else {
-                      changeStudents.add(studentList[item]);
-                    }
-                  });
-                },
-              );
-            },
-          ),
-          ElevatedButton(
-            onPressed: mark,
-            child: const Text('Mark'),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Select: '),
+            DropdownButton(
+              value: currLec,
+              items: [
+                for (var i = 1; i <= lecsInt; i++)
+                  DropdownMenuItem(
+                    child: Text(
+                        'Lecture No: ${lecs[i]['lec_no']} Date: ${lecs[i]['date']}'),
+                    value: i,
+                  )
+              ],
+              onChanged: dropDownCallback,
+            ),
+          ],
+        ),
+        ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: studentList.length,
+          itemBuilder: (context, item) {
+            return CheckboxListTile(
+              title: Text(studentList[item]['student']['roll_no'].toString() +
+                  " " +
+                  studentList[item]['student']['f_name'] +
+                  " " +
+                  studentList[item]['student']['l_name']),
+              value: !studentList[item]['student_status'],
+              onChanged: (val) {
+                setState(() {
+                  studentList[item]['student_status'] = !val!;
+                  if (changeStudents.contains(studentList[item])) {
+                    changeStudents.remove(studentList[item]);
+                  } else {
+                    changeStudents.add(studentList[item]);
+                  }
+                });
+              },
+            );
+          },
+        ),
+        ElevatedButton(
+          onPressed: mark,
+          child: const Text('Mark'),
+        ),
+      ],
     );
   }
 }

@@ -118,55 +118,50 @@ class _CreateAttendanceState extends State<CreateAttendance> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mark Attendance'),
-      ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Enter Lecture Number: '),
-                SizedBox(
-                  width: 50,
-                  child: TextField(
-                    controller: lecController,
-                    keyboardType: TextInputType.number,
-                  ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Enter Lecture Number: '),
+              SizedBox(
+                width: 50,
+                child: TextField(
+                  controller: lecController,
+                  keyboardType: TextInputType.number,
                 ),
-              ],
-            ),
-            ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: studentList.length,
-              itemBuilder: (context, item) {
-                return CheckboxListTile(
-                  title: Text(studentList[item]['roll_no'].toString() +
-                      " " +
-                      studentList[item]['f_name'] +
-                      " " +
-                      studentList[item]['l_name']),
-                  value: !studentList[item]['student_status'],
-                  onChanged: (val) {
-                    setState(() {
-                      studentList[item]['student_status'] = !val!;
-                    });
-                  },
-                );
-              },
-            ),
-            ElevatedButton(
-              onPressed: mark,
-              child: const Text('Mark'),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(10),
+              ),
+            ],
+          ),
+          ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: studentList.length,
+            itemBuilder: (context, item) {
+              return CheckboxListTile(
+                title: Text(studentList[item]['roll_no'].toString() +
+                    " " +
+                    studentList[item]['f_name'] +
+                    " " +
+                    studentList[item]['l_name']),
+                value: !studentList[item]['student_status'],
+                onChanged: (val) {
+                  setState(() {
+                    studentList[item]['student_status'] = !val!;
+                  });
+                },
+              );
+            },
+          ),
+          ElevatedButton(
+            onPressed: mark,
+            child: const Text('Mark'),
+          ),
+        ],
       ),
+      padding: const EdgeInsets.all(10),
     );
   }
 }
