@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Screens
 import 'login.dart';
+import 'package:sas/screens/hod_home.dart';
 import 'package:sas/screens/attendance.dart';
 import 'package:sas/screens/attendance/mark_attendance.dart';
 import 'package:sas/screens/attendance/edit_attendance.dart';
@@ -33,6 +34,13 @@ class _UserHomeState extends State<UserHome> {
           courseId = prefs.getInt('course_id')!;
         }
       });
+    }
+    if (teacher['type'] == 'admin') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HodHome(),
+        ),
+      );
     }
   }
 

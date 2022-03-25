@@ -30,7 +30,10 @@ class _AttendanceState extends State<Attendance> {
           ),
         ),
         body: const TabBarView(
-          children: [CreateAttendance(), EditAttendance()],
+          children: [
+            CreateAttendance(),
+            EditAttendance(),
+          ],
         ),
       ),
     );
