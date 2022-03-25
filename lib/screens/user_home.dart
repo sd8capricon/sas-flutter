@@ -9,14 +9,14 @@ import 'login.dart';
 import 'mark_attendance.dart';
 import 'edit_attendance.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class UserHome extends StatefulWidget {
+  const UserHome({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<UserHome> createState() => _UserHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _UserHomeState extends State<UserHome> {
   bool isLoggedIn = false;
   int courseId = 0;
   Map teacher = {};
@@ -95,8 +95,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: const Text('Home'),
+        title: const Text('User Home'),
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +103,7 @@ class _HomeState extends State<Home> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Home Page'),
+              const Text('User Home Page'),
               if (courseId > 0)
                 Column(
                   children: [

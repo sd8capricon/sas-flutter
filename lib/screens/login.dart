@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:sas/screens/hod_home.dart';
 import 'package:sas/variables.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'home.dart';
+import 'package:sas/screens/user_home.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -39,11 +40,20 @@ class _LoginState extends State<Login> {
       prefs.setString('teacher', jsonEncode(teacher));
       prefs.remove('course_id');
       if (courseId != null) prefs.setInt('course_id', courseId);
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
-      );
+      if (teacher['type'] == 'user') {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const UserHome(),
+          ),
+        );
+      }
+      if (teacher['type'] == 'admin') {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const HodHome(),
+          ),
+        );
+      }
     }
   }
 
@@ -58,8 +68,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: const Text('My Amazing app'),
+        title: const Text('Login'),
       ),
       body: Container(
         child: Form(

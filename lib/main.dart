@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sas/screens/home.dart';
+import 'package:sas/screens/user_home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'SAS',
-      home: Home(),
+      home: UserHome(),
     );
   }
 }
