@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Screens
+import 'package:sas/screens/attendance.dart';
 import 'login.dart';
 import 'mark_attendance.dart';
 import 'edit_attendance.dart';
@@ -107,6 +108,17 @@ class _UserHomeState extends State<UserHome> {
               if (courseId > 0)
                 Column(
                   children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Attendance(),
+                          ),
+                        );
+                      },
+                      child: const Text('Attendance'),
+                    ),
                     ElevatedButton(
                       onPressed: createAttendance,
                       child: const Text('Mark Attendance'),
