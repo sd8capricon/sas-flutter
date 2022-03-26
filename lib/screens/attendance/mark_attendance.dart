@@ -26,11 +26,13 @@ class _CreateAttendanceState extends State<CreateAttendance> {
 
   void getLocalStorage() async {
     final localStorage = await SharedPreferences.getInstance();
-    setState(() {
-      if (localStorage.getInt('course_id') != null) {
-        courseId = localStorage.getInt('course_id')!;
-      }
-    });
+    if (mounted) {
+      setState(() {
+        if (localStorage.getInt('course_id') != null) {
+          courseId = localStorage.getInt('course_id')!;
+        }
+      });
+    }
   }
 
   void getStudents() async {
@@ -38,12 +40,14 @@ class _CreateAttendanceState extends State<CreateAttendance> {
     final url = Uri.parse('$host/students');
     try {
       var students = await http.get(url);
-      setState(() {
-        studentList = jsonDecode(students.body);
-        for (var item in studentList) {
-          item['student_status'] = true;
-        }
-      });
+      if (mounted) {
+        setState(() {
+          studentList = jsonDecode(students.body);
+          for (var item in studentList) {
+            item['student_status'] = true;
+          }
+        });
+      }
     } on Exception catch (e) {
       message = 'Error Getting Students';
       final snackBar = SnackBar(

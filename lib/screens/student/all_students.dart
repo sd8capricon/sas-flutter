@@ -18,9 +18,11 @@ class _AllStudentsState extends State<AllStudents> {
   void getStudents() async {
     final url = Uri.parse('$host/students');
     final res = await http.get(url);
-    setState(() {
-      students = jsonDecode(res.body);
-    });
+    if (mounted) {
+      setState(() {
+        students = jsonDecode(res.body);
+      });
+    }
   }
 
   @override

@@ -55,18 +55,20 @@ class _EditAttendanceState extends State<EditAttendance> {
       return;
     }
     final lecData = body['lec_stats'];
-    setState(() {
-      lecsInt = body['num_lecs'] ?? 0;
-      courseId = idTemp;
-      for (var lec in lecData) {
-        var tempDate = DateTime.tryParse(lec['date']);
-        var data = {
-          'lec_no': lec['lec_no'].toString(),
-          'date': formatter.format(tempDate!)
-        };
-        lecs.add(data);
-      }
-    });
+    if (mounted) {
+      setState(() {
+        lecsInt = body['num_lecs'] ?? 0;
+        courseId = idTemp;
+        for (var lec in lecData) {
+          var tempDate = DateTime.tryParse(lec['date']);
+          var data = {
+            'lec_no': lec['lec_no'].toString(),
+            'date': formatter.format(tempDate!)
+          };
+          lecs.add(data);
+        }
+      });
+    }
     getAttendance();
   }
 
@@ -74,9 +76,11 @@ class _EditAttendanceState extends State<EditAttendance> {
     final url = Uri.parse('$host/attendance/$courseId/$currLec/');
     final res = await http.get(url);
     final students = jsonDecode(res.body);
-    setState(() {
-      studentList = students['attendance'];
-    });
+    if (mounted) {
+      setState(() {
+        studentList = students['attendance'];
+      });
+    }
   }
 
   void mark() async {

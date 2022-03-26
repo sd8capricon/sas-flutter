@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Screens
 import 'package:sas/screens/student/all_students.dart';
 import 'package:sas/screens/student/enroll_student.dart';
+import 'package:sas/screens/student/edit_student.dart';
 
 class Student extends StatefulWidget {
   const Student({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _StudentState extends State<Student> {
           children: [
             AllStudents(),
             EnrollStudent(),
-            Text('data'),
+            EditStudent(),
           ],
         ),
       ),
