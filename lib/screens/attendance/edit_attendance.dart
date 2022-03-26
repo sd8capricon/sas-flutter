@@ -52,7 +52,6 @@ class _EditAttendanceState extends State<EditAttendance> {
     }
     final body = jsonDecode(res.body);
     if (body['num_lecs'] == null) {
-      widget.tabController.index = 0;
       return;
     }
     final lecData = body['lec_stats'];
@@ -120,6 +119,19 @@ class _EditAttendanceState extends State<EditAttendance> {
 
   @override
   Widget build(BuildContext context) {
+    if (lecs.isEmpty) {
+      return AlertDialog(
+        title: const Text('No Attendance to Edit !'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              widget.tabController.index = 0;
+            },
+            child: const Text('Go back'),
+          ),
+        ],
+      );
+    }
     return Column(
       children: [
         Row(
