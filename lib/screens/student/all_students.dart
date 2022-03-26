@@ -32,32 +32,36 @@ class _AllStudentsState extends State<AllStudents> {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-        columns: const [
-          DataColumn(label: Text('Roll Number')),
-          DataColumn(label: Text('Name')),
-          DataColumn(label: Text('Attendance')),
-        ],
-        rows: students
-            .map(
-              (e) => DataRow(
-                cells: [
-                  DataCell(
-                    Center(
-                      child: Text(e['roll_no'].toString()),
+    return FittedBox(
+      alignment: Alignment.topLeft,
+      child: DataTable(
+          columns: const [
+            DataColumn(label: Text('Roll Number')),
+            DataColumn(label: Text('Name')),
+            DataColumn(label: Text('Attendance')),
+          ],
+          rows: students
+              .map(
+                (e) => DataRow(
+                  cells: [
+                    DataCell(
+                      Center(
+                        child: Text(e['roll_no'].toString()),
+                      ),
                     ),
-                  ),
-                  DataCell(
-                    Text(e['f_name'] + " " + e['l_name']),
-                  ),
-                  DataCell(
-                    Center(
-                      child: Text(e['total_attendance_percentage'].toString()),
+                    DataCell(
+                      Text(e['f_name'] + " " + e['l_name']),
                     ),
-                  ),
-                ],
-              ),
-            )
-            .toList());
+                    DataCell(
+                      Center(
+                        child:
+                            Text(e['total_attendance_percentage'].toString()),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              .toList()),
+    );
   }
 }
