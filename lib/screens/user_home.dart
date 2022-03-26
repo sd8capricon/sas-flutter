@@ -21,9 +21,15 @@ class UserHome extends StatefulWidget {
 class _UserHomeState extends State<UserHome> {
   bool isLoggedIn = false;
   int courseId = 0;
+  Map teacher = {};
 
   void getLocalStorage() async {
     final prefs = await SharedPreferences.getInstance();
+    if (prefs.get('teacher') != null) {
+      setState(() {
+        teacher = jsonDecode(prefs.get('teacher').toString());
+      });
+    }
     if (prefs.getInt('course_id') != null) {
       setState(() {
         courseId = prefs.getInt('course_id')!;
@@ -95,6 +101,30 @@ class _UserHomeState extends State<UserHome> {
       appBar: AppBar(
         title: const Text('User Home'),
       ),
+      drawer: teacher['type'] == 'admin'
+          ? Drawer(
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: const Text('HOD Home'),
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const HodHome(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Course'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            )
+          : null,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

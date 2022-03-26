@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sas/screens/user_home.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,6 +55,28 @@ class _HodHomeState extends State<HodHome> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("HOD Home"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text('HOD Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Course'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const UserHome(),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
