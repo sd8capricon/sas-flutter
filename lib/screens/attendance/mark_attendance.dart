@@ -32,17 +32,18 @@ class _CreateAttendanceState extends State<CreateAttendance> {
           courseId = localStorage.getInt('course_id')!;
         }
       });
+      getStudents();
     }
   }
 
   void getStudents() async {
     String message = '';
-    final url = Uri.parse('$host/students');
+    final url = Uri.parse('$host/course/$courseId');
     try {
       var students = await http.get(url);
       if (mounted) {
         setState(() {
-          studentList = jsonDecode(students.body);
+          studentList = jsonDecode(students.body)['enrolled_students'];
           for (var item in studentList) {
             item['student_status'] = true;
           }
@@ -117,7 +118,6 @@ class _CreateAttendanceState extends State<CreateAttendance> {
   void initState() {
     super.initState();
     getLocalStorage();
-    getStudents();
   }
 
   @override

@@ -59,14 +59,21 @@ class _HodHomeState extends State<HodHome> {
       drawer: Drawer(
         child: ListView(
           children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text(
+                'Manage',
+                style: TextStyle(color: Colors.white, fontSize: 30),
+              ),
+            ),
             ListTile(
-              title: const Text('HOD Home'),
+              title: const Text('HOD functions'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Course'),
+              title: const Text('Course functions'),
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
