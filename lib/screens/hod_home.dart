@@ -18,6 +18,7 @@ class _HodHomeState extends State<HodHome> {
   void logOut() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
+    prefs.remove('teacher');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const Login(),
@@ -67,11 +68,11 @@ class _HodHomeState extends State<HodHome> {
                     MaterialPageRoute(builder: (context) => const Student()),
                   )
                 },
-                child: Text('Student'),
+                child: const Text('Student'),
               ),
               ElevatedButton(
                 onPressed: logOut,
-                child: Text('Logout'),
+                child: const Text('Logout'),
               )
             ],
           ),

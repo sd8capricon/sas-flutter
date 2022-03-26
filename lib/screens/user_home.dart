@@ -21,32 +21,20 @@ class UserHome extends StatefulWidget {
 class _UserHomeState extends State<UserHome> {
   bool isLoggedIn = false;
   int courseId = 0;
-  Map teacher = {};
 
   void getLocalStorage() async {
     final prefs = await SharedPreferences.getInstance();
-    if (teacher.isEmpty) {
+    if (prefs.getInt('course_id') != null) {
       setState(() {
-        if (prefs.getString('teacher') != null) {
-          teacher = jsonDecode(prefs.getString('teacher').toString()) as Map;
-        }
-        if (prefs.getInt('course_id') != null) {
-          courseId = prefs.getInt('course_id')!;
-        }
+        courseId = prefs.getInt('course_id')!;
       });
-    }
-    if (teacher['type'] == 'admin') {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const HodHome(),
-        ),
-      );
     }
   }
 
   void checkUser() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    // TODO: verify token here
     if (token == null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -86,6 +74,7 @@ class _UserHomeState extends State<UserHome> {
   void logOut() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
+    prefs.remove('teacher');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const Login(),

@@ -19,6 +19,33 @@ class _LoginState extends State<Login> {
   var usernameController = TextEditingController();
   var passwordController = TextEditingController();
   var loginErr = '';
+  Map teacher = {};
+
+  void getLocalStorage() async {
+    final localStorage = await SharedPreferences.getInstance();
+    if (localStorage.get('teacher') != null) {
+      teacher = jsonDecode(localStorage.get('teacher').toString()) as Map;
+    }
+    if (localStorage.get('token') != null) {
+      // TODO: verify token here
+    }
+    print(teacher);
+    print(localStorage.get('token'));
+    if (teacher['type'] == 'admin') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HodHome(),
+        ),
+      );
+    }
+    if (teacher['type'] == 'user') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const UserHome(),
+        ),
+      );
+    }
+  }
 
   void login() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,21 +60,21 @@ class _LoginState extends State<Login> {
         loginErr = 'Incorrect Username or Password';
       });
     } else {
-      var teacher = body['teacher'];
+      var data = body['teacher'];
       var token = body['token'];
       var courseId = body['course_taught'];
       prefs.setString('token', token);
-      prefs.setString('teacher', jsonEncode(teacher));
+      prefs.setString('teacher', jsonEncode(data));
       prefs.remove('course_id');
       if (courseId != null) prefs.setInt('course_id', courseId);
-      if (teacher['type'] == 'user') {
+      if (data['type'] == 'user') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const UserHome(),
           ),
         );
       }
-      if (teacher['type'] == 'admin') {
+      if (data['type'] == 'admin') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const HodHome(),
@@ -55,6 +82,13 @@ class _LoginState extends State<Login> {
         );
       }
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocalStorage();
   }
 
   @override

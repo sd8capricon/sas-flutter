@@ -47,6 +47,16 @@ class _EnrollStudentState extends State<EnrollStudent> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    fNameController.dispose();
+    lNameController.dispose();
+    rollController.dispose();
+    emailController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
