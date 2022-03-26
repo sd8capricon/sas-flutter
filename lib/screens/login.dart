@@ -29,14 +29,14 @@ class _LoginState extends State<Login> {
     if (localStorage.get('token') != null) {
       // TODO: verify token here
     }
-    if (teacher['type'] == 'admin') {
+    if (teacher['type'] == 'hod') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const HodHome(),
         ),
       );
     }
-    if (teacher['type'] == 'user') {
+    if (teacher['type'] == 'teacher') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const UserHome(),
@@ -65,14 +65,14 @@ class _LoginState extends State<Login> {
       prefs.setString('teacher', jsonEncode(data));
       prefs.remove('course_id');
       if (courseId != null) prefs.setInt('course_id', courseId);
-      if (data['type'] == 'user') {
+      if (data['type'] == 'teacher') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const UserHome(),
           ),
         );
       }
-      if (data['type'] == 'admin') {
+      if (data['type'] == 'hod') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const HodHome(),

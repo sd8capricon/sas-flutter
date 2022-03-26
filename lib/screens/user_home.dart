@@ -101,7 +101,7 @@ class _UserHomeState extends State<UserHome> {
       appBar: AppBar(
         title: const Text('User Home'),
       ),
-      drawer: teacher['type'] == 'admin'
+      drawer: teacher['type'] == 'hod'
           ? Drawer(
               child: ListView(
                 children: [
@@ -153,14 +153,6 @@ class _UserHomeState extends State<UserHome> {
                       },
                       child: const Text('Attendance'),
                     ),
-                    // ElevatedButton(
-                    //   onPressed: createAttendance,
-                    //   child: const Text('Mark Attendance'),
-                    // ),
-                    // ElevatedButton(
-                    //   onPressed: editAttendance,
-                    //   child: const Text('Edit Attendance'),
-                    // )
                   ],
                 )
               else
