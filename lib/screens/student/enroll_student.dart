@@ -68,7 +68,10 @@ class _EnrollStudentState extends State<EnrollStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('First Name'),
+              const Text(
+                'First Name',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,
@@ -86,7 +89,10 @@ class _EnrollStudentState extends State<EnrollStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Last Name'),
+              const Text(
+                'Last Name',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,
@@ -104,7 +110,10 @@ class _EnrollStudentState extends State<EnrollStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Roll Number'),
+              const Text(
+                'Roll Number',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,
@@ -123,7 +132,10 @@ class _EnrollStudentState extends State<EnrollStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Email'),
+              const Text(
+                'Email',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,

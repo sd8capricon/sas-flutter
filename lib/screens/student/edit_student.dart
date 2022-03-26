@@ -109,7 +109,10 @@ class _EditStudentState extends State<EditStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Select Roll Number: '),
+              const Text(
+                'Select Roll Number: ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               DropdownButton(
                 value: currRoll,
                 items: students
@@ -127,7 +130,10 @@ class _EditStudentState extends State<EditStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('First Name'),
+              const Text(
+                'First Name',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,
@@ -145,7 +151,10 @@ class _EditStudentState extends State<EditStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Last Name'),
+              const Text(
+                'Last Name',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,
@@ -163,7 +172,10 @@ class _EditStudentState extends State<EditStudent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Email'),
+              const Text(
+                'Email',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 child: TextFormField(
                   textAlign: TextAlign.center,
