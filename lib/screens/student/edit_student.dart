@@ -14,10 +14,91 @@ class EditStudent extends StatefulWidget {
 
 class _EditStudentState extends State<EditStudent> {
   final formKey = GlobalKey<FormState>();
+  int currRoll = 1;
+  List students = [];
   var err = '';
   var fNameController = TextEditingController();
   var lNameController = TextEditingController();
   var emailController = TextEditingController();
+
+  int binarySearch(List arr, int val) {
+    int min = 0;
+    int max = arr.length;
+    while (max > min) {
+      int mid = ((max + min) / 2).floor();
+      if (arr[mid]['roll_no'] == val) {
+        return mid;
+      } else if (val > arr[mid]['roll_no']) {
+        print('greater');
+        min = mid++;
+      } else if (val < arr[mid]['roll_no']) {
+        print('lesser');
+        max = mid--;
+      }
+    }
+    return -1;
+  }
+
+  void setControllers(index) {
+    fNameController.text = students[index]['f_name'].toString();
+    lNameController.text = students[index]['l_name'].toString();
+    emailController.text = students[index]['email'].toString();
+  }
+
+  void dropDownCallback(var value) async {
+    setState(() {
+      currRoll = value!;
+      int index = binarySearch(students, currRoll);
+      setControllers(index);
+    });
+  }
+
+  void getStudents() async {
+    final url = Uri.parse('$host/students');
+    final res = await http.get(url);
+    if (mounted) {
+      setState(() {
+        students = jsonDecode(res.body);
+        currRoll = students[0]['roll_no'];
+        setControllers(0);
+      });
+    }
+  }
+
+  void submit() async {
+    Map body = {
+      'f_name': fNameController.text,
+      'l_name': lNameController.text,
+      'email': emailController.text
+    };
+    final url = Uri.parse('$host/student/$currRoll/');
+    final res = await http.patch(url, body: body);
+    var data = jsonDecode(res.body);
+    switch (res.statusCode) {
+      case 400:
+        setState(() {
+          err = data['error'];
+        });
+        break;
+      case 200:
+        setState(() {
+          err = '';
+        });
+        const snackBar = SnackBar(
+          content: Text('Student Updated'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        break;
+      default:
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getStudents();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +106,24 @@ class _EditStudentState extends State<EditStudent> {
       key: formKey,
       child: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Select Roll Number: '),
+              DropdownButton(
+                value: currRoll,
+                items: students
+                    .map(
+                      (e) => DropdownMenuItem(
+                        child: Text(e['roll_no'].toString()),
+                        value: e['roll_no'],
+                      ),
+                    )
+                    .toList(),
+                onChanged: dropDownCallback,
+              ),
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -84,10 +183,10 @@ class _EditStudentState extends State<EditStudent> {
             child: ElevatedButton(
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  print('Hello');
+                  submit();
                 }
               },
-              child: const Text('Enroll'),
+              child: const Text('Update'),
             ),
           ),
           Text(

@@ -29,8 +29,6 @@ class _LoginState extends State<Login> {
     if (localStorage.get('token') != null) {
       // TODO: verify token here
     }
-    print(teacher);
-    print(localStorage.get('token'));
     if (teacher['type'] == 'admin') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

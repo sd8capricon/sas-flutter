@@ -20,14 +20,13 @@ class EditAttendance extends StatefulWidget {
 class _EditAttendanceState extends State<EditAttendance> {
   int courseId = 0;
   int currLec = 1;
-  int lecsInt = 0;
   String message = '';
-  List lecs = [0];
+  List lecs = [];
   List menuItems = [];
   List studentList = [];
   List changeStudents = [];
 
-  void dropDownCallback(int? value) async {
+  void dropDownCallback(var value) async {
     setState(() {
       currLec = value!;
     });
@@ -57,16 +56,16 @@ class _EditAttendanceState extends State<EditAttendance> {
     final lecData = body['lec_stats'];
     if (mounted) {
       setState(() {
-        lecsInt = body['num_lecs'] ?? 0;
         courseId = idTemp;
         for (var lec in lecData) {
           var tempDate = DateTime.tryParse(lec['date']);
           var data = {
-            'lec_no': lec['lec_no'].toString(),
+            'lec_no': lec['lec_no'],
             'date': formatter.format(tempDate!)
           };
           lecs.add(data);
         }
+        currLec = lecs[0]['lec_no'];
       });
     }
     getAttendance();
@@ -127,14 +126,16 @@ class _EditAttendanceState extends State<EditAttendance> {
             const Text('Select: '),
             DropdownButton(
               value: currLec,
-              items: [
-                for (var i = 1; i <= lecsInt; i++)
-                  DropdownMenuItem(
-                    child: Text(
-                        'Lecture No: ${lecs[i]['lec_no']} Date: ${lecs[i]['date']}'),
-                    value: i,
+              items: lecs
+                  .map(
+                    (e) => DropdownMenuItem(
+                      child: Text(
+                          'Lecture No: ${e['lec_no'].toString()} Date: ${e['date']}'),
+                      // Text('${e['lec_no'].toString()}'),
+                      value: e['lec_no'],
+                    ),
                   )
-              ],
+                  .toList(),
               onChanged: dropDownCallback,
             ),
           ],

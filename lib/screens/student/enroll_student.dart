@@ -37,6 +37,9 @@ class _EnrollStudentState extends State<EnrollStudent> {
         });
         break;
       case 200:
+        setState(() {
+          err = '';
+        });
         const snackBar = SnackBar(
           content: Text('Student Enrolled'),
         );
