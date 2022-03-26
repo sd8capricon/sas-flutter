@@ -11,7 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'home.dart';
 
 class EditAttendance extends StatefulWidget {
-  const EditAttendance({Key? key}) : super(key: key);
+  final TabController tabController;
+  const EditAttendance({Key? key, required this.tabController})
+      : super(key: key);
 
   @override
   State<EditAttendance> createState() => _EditAttendanceState();
@@ -50,7 +52,7 @@ class _EditAttendanceState extends State<EditAttendance> {
     }
     final body = jsonDecode(res.body);
     if (body['num_lecs'] == null) {
-      Navigator.pop(context, 'No Lectures to edit');
+      widget.tabController.index = 0;
       return;
     }
     final lecData = body['lec_stats'];

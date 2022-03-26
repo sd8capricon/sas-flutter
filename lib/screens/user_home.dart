@@ -8,8 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
 import 'package:sas/screens/hod_home.dart';
 import 'package:sas/screens/attendance.dart';
-import 'package:sas/screens/attendance/mark_attendance.dart';
-import 'package:sas/screens/attendance/edit_attendance.dart';
 
 class UserHome extends StatefulWidget {
   const UserHome({Key? key}) : super(key: key);
@@ -51,29 +49,6 @@ class _UserHomeState extends State<UserHome> {
       setState(() {
         isLoggedIn = true;
       });
-    }
-  }
-
-  void createAttendance() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const CreateAttendance(),
-      ),
-    );
-  }
-
-  void editAttendance() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const EditAttendance(),
-      ),
-    );
-    if (result != null) {
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text('$result')));
     }
   }
 

@@ -10,31 +10,41 @@ class Attendance extends StatefulWidget {
   State<Attendance> createState() => _AttendanceState();
 }
 
-class _AttendanceState extends State<Attendance> {
+class _AttendanceState extends State<Attendance>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController =
+      TabController(length: 2, vsync: this);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Attendance'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                text: 'Mark',
-              ),
-              Tab(
-                text: 'Edit',
-              ),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            CreateAttendance(),
-            EditAttendance(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Attendance'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(
+              text: 'Mark',
+            ),
+            Tab(
+              text: 'Edit',
+            ),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          const CreateAttendance(),
+          EditAttendance(
+            tabController: _tabController,
+          ),
+        ],
       ),
     );
   }
