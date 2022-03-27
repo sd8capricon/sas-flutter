@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// Components
+import 'package:sas/components/HodHomeDrawer.dart';
+
 // Screens
 import 'package:sas/screens/student/all_students.dart';
 import 'package:sas/screens/student/enroll_student.dart';
@@ -34,6 +37,7 @@ class _StudentState extends State<Student> {
             ],
           ),
         ),
+        drawer: const HodDrawer(),
         body: const TabBarView(
           children: [
             AllStudents(),

@@ -1,12 +1,14 @@
 import 'dart:convert';
-
-// Packages
 import 'package:flutter/material.dart';
+
+// Pub Packages
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Components
+import 'package:sas/components/HodCourseDrawer.dart';
 
 // Screens
 import 'login.dart';
-import 'package:sas/screens/hod_home.dart';
 import 'package:sas/screens/attendance.dart';
 
 class UserHome extends StatefulWidget {
@@ -40,6 +42,7 @@ class _UserHomeState extends State<UserHome> {
     final token = prefs.getString('token');
     // TODO: verify token here
     if (token == null) {
+      logOut();
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const Login(),
@@ -76,37 +79,7 @@ class _UserHomeState extends State<UserHome> {
       appBar: AppBar(
         title: const Text('User Home'),
       ),
-      drawer: teacher['type'] == 'hod'
-          ? Drawer(
-              child: ListView(
-                children: [
-                  const DrawerHeader(
-                    decoration: BoxDecoration(color: Colors.blue),
-                    child: Text(
-                      'Manage',
-                      style: TextStyle(color: Colors.white, fontSize: 30),
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('HOD functions'),
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const HodHome(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Course functions'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-            )
-          : null,
+      drawer: teacher['type'] == 'hod' ? const HodCourseDrawer() : null,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
