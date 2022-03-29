@@ -60,11 +60,11 @@ class _LoginState extends State<Login> {
     } else {
       var data = body['teacher'];
       var token = body['token'];
-      var courseId = body['course_taught'];
+      var courseId = body['teacher']['course_id'];
       prefs.setString('token', token);
       prefs.setString('teacher', jsonEncode(data));
       prefs.remove('course_id');
-      if (courseId != null) prefs.setInt('course_id', courseId);
+      if (courseId != null) await prefs.setInt('course_id', courseId);
       if (data['type'] == 'teacher') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

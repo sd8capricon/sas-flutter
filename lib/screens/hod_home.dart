@@ -23,8 +23,7 @@ class _HodHomeState extends State<HodHome> {
 
   void logOut() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
-    prefs.remove('teacher');
+    await prefs.clear();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const Login(),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+// Components
+import 'package:sas/components/HodCourseDrawer.dart';
+
 import 'package:sas/screens/attendance/mark_attendance.dart';
 import 'package:sas/screens/attendance/edit_attendance.dart';
 
 class Attendance extends StatefulWidget {
-  const Attendance({Key? key}) : super(key: key);
+  final bool type;
+  const Attendance({Key? key, required this.type}) : super(key: key);
 
   @override
   State<Attendance> createState() => _AttendanceState();
@@ -37,6 +41,7 @@ class _AttendanceState extends State<Attendance>
           ],
         ),
       ),
+      drawer: widget.type ? const HodCourseDrawer() : null,
       body: TabBarView(
         controller: _tabController,
         children: [
