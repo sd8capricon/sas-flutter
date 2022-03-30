@@ -50,65 +50,60 @@ class _ProfileState extends State<Profile> {
           bottom: 200,
           left: 20,
         ),
-        child: Container(
-          // color: Colors.red,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // id
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(child: const Text('user Id: '), width: boxWidth),
-                  SizedBox(
-                      child: Text(widget.teacher['teacher_id'].toString()),
-                      width: boxWidth),
-                ],
-              ),
-              // Name
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(child: const Text('Name: '), width: boxWidth),
-                  SizedBox(
-                    child: Text(widget.teacher['f_name'] +
-                        " " +
-                        widget.teacher['l_name']),
-                    width: boxWidth,
-                  ),
-                ],
-              ),
-              // username
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(child: const Text('username: '), width: boxWidth),
-                  SizedBox(
-                      child: Text(widget.teacher['username']), width: boxWidth),
-                ],
-              ),
-              // User Type
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(child: const Text('user type: '), width: boxWidth),
-                  SizedBox(
-                      child: Text(widget.teacher['type']), width: boxWidth),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                      child: const Text('Course Taught:'), width: boxWidth),
-                  SizedBox(
-                      child: Text(widget.teacher['course_name'].toString()),
-                      width: boxWidth),
-                ],
-              ),
-              ElevatedButton(onPressed: logOut, child: Text('Logout'))
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // id
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(child: const Text('user Id: '), width: boxWidth),
+                SizedBox(
+                    child: Text(widget.teacher['teacher_id'].toString()),
+                    width: boxWidth),
+              ],
+            ),
+            // Name
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(child: const Text('Name: '), width: boxWidth),
+                SizedBox(
+                  child: Text(widget.teacher['f_name'] +
+                      " " +
+                      widget.teacher['l_name']),
+                  width: boxWidth,
+                ),
+              ],
+            ),
+            // username
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(child: const Text('username: '), width: boxWidth),
+                SizedBox(
+                    child: Text(widget.teacher['username']), width: boxWidth),
+              ],
+            ),
+            // User Type
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(child: const Text('user type: '), width: boxWidth),
+                SizedBox(child: Text(widget.teacher['type']), width: boxWidth),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(child: const Text('Course Taught:'), width: boxWidth),
+                SizedBox(
+                    child: Text(widget.teacher['course_name'].toString()),
+                    width: boxWidth),
+              ],
+            ),
+            ElevatedButton(onPressed: logOut, child: Text('Logout'))
+          ],
         ),
       ),
     );

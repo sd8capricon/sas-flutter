@@ -29,10 +29,8 @@ class _EditStudentState extends State<EditStudent> {
       if (arr[mid]['roll_no'] == val) {
         return mid;
       } else if (val > arr[mid]['roll_no']) {
-        print('greater');
         min = mid++;
       } else if (val < arr[mid]['roll_no']) {
-        print('lesser');
         max = mid--;
       }
     }

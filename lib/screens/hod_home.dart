@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sas/screens/profile.dart';
 
 // pub packages
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,7 @@ import 'package:sas/components/HodHomeDrawer.dart';
 // Screens
 import 'login.dart';
 import 'package:sas/screens/student.dart';
+import 'package:sas/screens/defaultorList.dart';
 
 class HodHome extends StatefulWidget {
   const HodHome({Key? key}) : super(key: key);
@@ -70,6 +72,10 @@ class _HodHomeState extends State<HodHome> {
           //   icon: Icon(Icons.work),
           //   label: 'Teacher',
           // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dangerous),
+            label: 'Defaultors',
+          )
         ],
         currentIndex: _selectedIndex,
         onTap: (int index) {
@@ -85,6 +91,8 @@ class _HodHomeState extends State<HodHome> {
   final pages = [
     const HomePage(),
     const Student(),
+    const DeafultorList(),
+    // const Profile(teacher: teacher)
   ];
 }
 
