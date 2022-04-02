@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sas/screens/course.dart';
 import 'package:sas/screens/teacher.dart';
 
 // pub packages
@@ -97,7 +98,7 @@ class _HodHomeState extends State<HodHome> {
     const HomePage(),
     const Student(),
     const Teacher(),
-    const Text('Course'),
+    const Course(),
     const DeafultorList()
   ];
 }

@@ -46,7 +46,7 @@ class _EditAttendanceState extends State<EditAttendance> {
     final res = await http.get(url);
     switch (res.statusCode) {
       case 400:
-        Navigator.pop(context, 'Err');
+        print('something went wrong');
         break;
       default:
     }

@@ -23,7 +23,7 @@ class _CourseState extends State<Course> {
           bottom: const TabBar(
             tabs: [
               Tab(
-                text: 'Enrol',
+                text: 'Enroll',
               ),
               Tab(
                 text: 'Update',
