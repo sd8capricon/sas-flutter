@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sas/screens/profile.dart';
+import 'package:sas/screens/teacher.dart';
 
 // pub packages
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,6 +60,7 @@ class _HodHomeState extends State<HodHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -68,14 +70,18 @@ class _HodHomeState extends State<HodHome> {
             icon: Icon(Icons.boy),
             label: 'Student',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.work),
-          //   label: 'Teacher',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work),
+            label: 'Teacher',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Course',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dangerous),
             label: 'Defaultors',
-          )
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: (int index) {
@@ -91,8 +97,9 @@ class _HodHomeState extends State<HodHome> {
   final pages = [
     const HomePage(),
     const Student(),
-    const DeafultorList(),
-    // const Profile(teacher: teacher)
+    const Teacher(),
+    const Text('Course'),
+    const DeafultorList()
   ];
 }
 
