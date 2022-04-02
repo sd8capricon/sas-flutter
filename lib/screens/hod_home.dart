@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sas/screens/profile.dart';
 import 'package:sas/screens/teacher.dart';
 
 // pub packages
@@ -11,7 +10,7 @@ import 'package:sas/components/HodHomeDrawer.dart';
 // Screens
 import 'login.dart';
 import 'package:sas/screens/student.dart';
-import 'package:sas/screens/defaultorList.dart';
+import 'package:sas/screens/defaulterList.dart';
 
 class HodHome extends StatefulWidget {
   const HodHome({Key? key}) : super(key: key);
@@ -80,7 +79,7 @@ class _HodHomeState extends State<HodHome> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dangerous),
-            label: 'Defaultors',
+            label: 'Defaulters',
           ),
         ],
         currentIndex: _selectedIndex,
