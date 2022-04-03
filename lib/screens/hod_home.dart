@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:math' as math;
+import 'package:sas/variables.dart';
 import 'package:flutter/material.dart';
-import 'package:sas/screens/course.dart';
-import 'package:sas/screens/teacher.dart';
 
 // pub packages
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:charts_flutter/flutter.dart' as charts;
 
 // Components
 import 'package:sas/components/HodHomeDrawer.dart';
@@ -11,6 +14,8 @@ import 'package:sas/components/HodHomeDrawer.dart';
 // Screens
 import 'login.dart';
 import 'package:sas/screens/student.dart';
+import 'package:sas/screens/course.dart';
+import 'package:sas/screens/teacher.dart';
 import 'package:sas/screens/defaulterList.dart';
 
 class HodHome extends StatefulWidget {
@@ -111,32 +116,89 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var data = [LinearAttendance('course', 0, Colors.red)];
+
+  void getData() async {
+    final url = Uri.parse('$host/all-course-stats');
+    final res = await http.get(url);
+    var body = jsonDecode(res.body);
+    setState(() {
+      data = [];
+      for (var course in body) {
+        data.add(LinearAttendance(
+            course['course_name'],
+            double.parse(course['avg_course_attendance']),
+            Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+                .withOpacity(1.0)));
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var series = [
+      charts.Series(
+        domainFn: (LinearAttendance la, _) => la.lecs,
+        measureFn: (LinearAttendance la, _) => la.attendance,
+        colorFn: (LinearAttendance la, _) => la.color,
+        data: data,
+        id: 'Attendance', // x-axis
+      ),
+    ];
+
+    var chart = charts.BarChart(
+      series,
+      animate: true,
+    );
+
+    var chartWidget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 350,
+        height: 200,
+        child: chart,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("HOD Home"),
       ),
       drawer: const HodDrawer(),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Student()),
-                  )
-                },
-                child: const Text('Student'),
-              ),
-            ],
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                const Text(
+                  'Average Course Attendance',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                chartWidget,
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
+}
+
+class LinearAttendance {
+  final String lecs;
+  final double attendance;
+  final charts.Color color;
+
+  LinearAttendance(this.lecs, this.attendance, Color color)
+      : color = charts.Color(
+            r: color.red, g: color.green, b: color.blue, a: color.alpha);
 }

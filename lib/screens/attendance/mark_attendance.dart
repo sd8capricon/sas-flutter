@@ -77,7 +77,7 @@ class _CreateAttendanceState extends State<CreateAttendance> {
     });
     try {
       int currLec = int.parse(lecController.text);
-      final url = Uri.parse('$host/get-last-lec/1/');
+      final url = Uri.parse('$host/get-last-lec/$courseId/');
       final res = await http.get(url);
       switch (res.statusCode) {
         case 400:
