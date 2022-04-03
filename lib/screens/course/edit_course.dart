@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 // Pub Packages
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EditCourse extends StatefulWidget {
   const EditCourse({Key? key}) : super(key: key);
@@ -187,6 +186,29 @@ class _EditCourseState extends State<EditCourse> {
     }
   }
 
+  void remove() async {
+    final url = Uri.parse('$host/course/$currCourse/');
+    final res = await http.delete(url);
+    var data = jsonDecode(res.body);
+    switch (res.statusCode) {
+      case 400:
+        setState(() {
+          err = data['error'];
+        });
+        break;
+      case 200:
+        setState(() {
+          err = '';
+        });
+        const snackBar = SnackBar(
+          content: Text('Course Removed'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        break;
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -309,6 +331,19 @@ class _EditCourseState extends State<EditCourse> {
             err,
             style: const TextStyle(
               color: Colors.red,
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: remove,
+                child: const Text('Remove'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                ),
+              ),
             ),
           ),
         ],

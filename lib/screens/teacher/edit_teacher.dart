@@ -96,6 +96,29 @@ class _EditTeacherState extends State<EditTeacher> {
     }
   }
 
+  void remove() async {
+    final url = Uri.parse('$host/teacher/$currId/');
+    final res = await http.delete(url);
+    var data = jsonDecode(res.body);
+    switch (res.statusCode) {
+      case 400:
+        setState(() {
+          err = data['error'];
+        });
+        break;
+      case 200:
+        setState(() {
+          err = '';
+        });
+        const snackBar = SnackBar(
+          content: Text('Teacher Removed'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        break;
+      default:
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -107,153 +130,169 @@ class _EditTeacherState extends State<EditTeacher> {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Select Teacher id: ',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              DropdownButton(
-                value: currId,
-                items: teachers
-                    .map(
-                      (e) => DropdownMenuItem(
-                        child: Text(e['teacher_id'].toString()),
-                        value: e['teacher_id'],
-                      ),
-                    )
-                    .toList(),
-                onChanged: dropDownCallback,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                'Username',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: uNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Select Teacher id: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                width: 150,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                'First Name',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: fNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  },
+                DropdownButton(
+                  value: currId,
+                  items: teachers
+                      .map(
+                        (e) => DropdownMenuItem(
+                          child: Text(e['teacher_id'].toString()),
+                          value: e['teacher_id'],
+                        ),
+                      )
+                      .toList(),
+                  onChanged: dropDownCallback,
                 ),
-                width: 150,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                'Last Name',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: lNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  },
-                ),
-                width: 150,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                'Password',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: passController,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                ),
-                width: 150,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                'Confirm Password',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: passConfirmController,
-                  obscureText: true,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  validator: (value) {
-                    if (value != passController.text) {
-                      return 'Passwords do not match';
-                    }
-                  },
-                ),
-                width: 150,
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  submit();
-                }
-              },
-              child: const Text('Update'),
+              ],
             ),
-          ),
-          Text(
-            err,
-            style: const TextStyle(
-              color: Colors.red,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'Username',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: uNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
+                  ),
+                  width: 150,
+                ),
+              ],
             ),
-          )
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'First Name',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: fNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
+                  ),
+                  width: 150,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'Last Name',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: lNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
+                  ),
+                  width: 150,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'Password',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: passController,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                  ),
+                  width: 150,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'Confirm Password',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: passConfirmController,
+                    obscureText: true,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    validator: (value) {
+                      if (value != passController.text) {
+                        return 'Passwords do not match';
+                      }
+                    },
+                  ),
+                  width: 150,
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    submit();
+                  }
+                },
+                child: const Text('Update'),
+              ),
+            ),
+            Text(
+              err,
+              style: const TextStyle(
+                color: Colors.red,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: remove,
+                  child: const Text('Remove'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

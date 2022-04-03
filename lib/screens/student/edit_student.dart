@@ -91,6 +91,29 @@ class _EditStudentState extends State<EditStudent> {
     }
   }
 
+  void remove() async {
+    final url = Uri.parse('$host/student/$currRoll/');
+    final res = await http.delete(url);
+    var data = jsonDecode(res.body);
+    switch (res.statusCode) {
+      case 400:
+        setState(() {
+          err = data['error'];
+        });
+        break;
+      case 200:
+        setState(() {
+          err = '';
+        });
+        const snackBar = SnackBar(
+          content: Text('Student Removed'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        break;
+      default:
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -204,7 +227,20 @@ class _EditStudentState extends State<EditStudent> {
             style: const TextStyle(
               color: Colors.red,
             ),
-          )
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: remove,
+                child: const Text('Remove'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
