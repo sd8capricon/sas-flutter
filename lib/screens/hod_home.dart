@@ -116,22 +116,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var data = [LinearAttendance('course', 0, Colors.red)];
+  var avgAtt = 0.0;
+  var barData = [BarAttendance('course', 0, Colors.red)];
+  var donutData = [
+    DonutAttendance('present', 0, Colors.green),
+    DonutAttendance('absent', 0, Colors.red),
+  ];
 
   void getData() async {
     final url = Uri.parse('$host/all-course-stats');
     final res = await http.get(url);
     var body = jsonDecode(res.body);
-    setState(() {
-      data = [];
-      for (var course in body) {
-        data.add(LinearAttendance(
-            course['course_name'],
-            double.parse(course['avg_course_attendance']),
-            Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-                .withOpacity(1.0)));
-      }
-    });
+    print(body.runtimeType);
+    if (mounted) {
+      setState(() {
+        barData = [];
+        donutData = [];
+        for (var course in body) {
+          barData.add(BarAttendance(
+              course['course_name'],
+              double.parse(course['avg_course_attendance']),
+              Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+                  .withOpacity(1.0)));
+          avgAtt += double.parse(course['avg_course_attendance']);
+        }
+        avgAtt = double.parse((avgAtt / barData.length).toStringAsFixed(2));
+        donutData.add(DonutAttendance('present', avgAtt, Colors.lightGreen));
+        donutData
+            .add(DonutAttendance('absent', 100 - avgAtt, Colors.redAccent));
+      });
+    }
   }
 
   @override
@@ -143,27 +157,58 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var series = [
+    var barSeries = [
       charts.Series(
-        domainFn: (LinearAttendance la, _) => la.lecs,
-        measureFn: (LinearAttendance la, _) => la.attendance,
-        colorFn: (LinearAttendance la, _) => la.color,
-        data: data,
-        id: 'Attendance', // x-axis
+        domainFn: (BarAttendance la, _) => la.course, // x-axis
+        measureFn: (BarAttendance la, _) => la.attendance,
+        colorFn: (BarAttendance la, _) => la.color,
+        data: barData,
+        id: 'Attendance',
       ),
     ];
 
-    var chart = charts.BarChart(
-      series,
+    var donutSerires = [
+      charts.Series(
+        domainFn: (DonutAttendance pa, _) => pa.type,
+        measureFn: (DonutAttendance pa, _) => pa.att,
+        colorFn: (DonutAttendance pa, _) => pa.color,
+        labelAccessorFn: (DonutAttendance pa, _) => '${pa.type}\n${pa.att}',
+        data: donutData,
+        id: 'Attendance2',
+      ),
+    ];
+
+    var barChart = charts.BarChart(
+      barSeries,
       animate: true,
     );
 
-    var chartWidget = Padding(
+    var donutChart = charts.PieChart<String>(
+      donutSerires,
+      animate: true,
+      defaultRenderer: charts.ArcRendererConfig(
+        arcWidth: 60,
+        arcRendererDecorators: [
+          charts.ArcLabelDecorator(),
+        ],
+      ),
+    );
+
+    var barChartWidget = Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         width: 350,
         height: 200,
-        child: chart,
+        child: barChart,
+      ),
+    );
+
+    var donutChartWidget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 350,
+        height: 250,
+        child: donutChart,
       ),
     );
 
@@ -183,7 +228,15 @@ class _HomePageState extends State<HomePage> {
                   'Average Course Attendance',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                chartWidget,
+                barChartWidget,
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    '% Students attending lecs',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                donutChartWidget,
               ],
             ),
           ],
@@ -193,12 +246,22 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class LinearAttendance {
-  final String lecs;
+class BarAttendance {
+  final String course;
   final double attendance;
   final charts.Color color;
 
-  LinearAttendance(this.lecs, this.attendance, Color color)
+  BarAttendance(this.course, this.attendance, Color color)
+      : color = charts.Color(
+            r: color.red, g: color.green, b: color.blue, a: color.alpha);
+}
+
+class DonutAttendance {
+  final String type;
+  final double att;
+  final charts.Color color;
+
+  DonutAttendance(this.type, this.att, Color color)
       : color = charts.Color(
             r: color.red, g: color.green, b: color.blue, a: color.alpha);
 }
