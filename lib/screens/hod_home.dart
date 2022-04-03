@@ -99,7 +99,7 @@ class _HodHomeState extends State<HodHome> {
     const Student(),
     const Teacher(),
     const Course(),
-    const DeafultorList()
+    const DefaulterList()
   ];
 }
 
