@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> {
     var donutChartWidget = Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        width: 350,
+        width: 300,
         height: 250,
         child: donutChart,
       ),
@@ -219,26 +219,21 @@ class _HomePageState extends State<HomePage> {
       drawer: const HodDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
-            Column(
-              children: [
-                const Text(
-                  'Average Course Attendance',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                barChartWidget,
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    '% Students attending lecs',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                donutChartWidget,
-              ],
+            const Text(
+              'Average Course Attendance',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+            barChartWidget,
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                '% Students attending lecs',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+            donutChartWidget,
           ],
         ),
       ),
