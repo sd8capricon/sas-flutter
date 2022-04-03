@@ -98,52 +98,136 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/login.png'), fit: BoxFit.cover),
       ),
-      body: Container(
-        child: Form(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                child: const Text('Login'),
-                margin: const EdgeInsets.only(bottom: 30),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 39, top: 133),
+              child: const Text(
+                'Welcome\nLOG IN',
+                style: TextStyle(color: Colors.white, fontSize: 33),
               ),
-              TextFormField(
-                controller: usernameController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter username',
+            ),
+            SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.5,
+                    right: 35,
+                    left: 35),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: usernameController,
+                      decoration: InputDecoration(
+                          fillColor: Colors.grey.shade100,
+                          filled: true,
+                          hintText: 'Your Username',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          fillColor: Colors.grey.shade100,
+                          filled: true,
+                          hintText: ' Your Password',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: const Color(0xff4c505b),
+                          child: IconButton(
+                            color: Colors.white,
+                            onPressed: login,
+                            icon: const Icon(Icons.arrow_forward),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Text(
+                      loginErr,
+                      style: const TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  hintText: 'Password',
-                ),
-                obscureText: true,
-                autocorrect: false,
-                enableSuggestions: false,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: ElevatedButton(
-                  onPressed: login,
-                  child: const Text('Login'),
-                ),
-              ),
-              Text(
-                loginErr,
-                style: const TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ],
-          ),
+            )
+          ],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 50),
       ),
     );
   }
+
+  // Old Login
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Login'),
+  //     ),
+  //     body: Container(
+  //       child: Form(
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Container(
+  //               child: const Text('Login'),
+  //               margin: const EdgeInsets.only(bottom: 30),
+  //             ),
+  //             TextFormField(
+  //               controller: usernameController,
+  //               decoration: const InputDecoration(
+  //                 hintText: 'Enter username',
+  //               ),
+  //             ),
+  //             TextFormField(
+  //               controller: passwordController,
+  //               decoration: const InputDecoration(
+  //                 hintText: 'Password',
+  //               ),
+  //               obscureText: true,
+  //               autocorrect: false,
+  //               enableSuggestions: false,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.all(20),
+  //               child: ElevatedButton(
+  //                 onPressed: login,
+  //                 child: const Text('Login'),
+  //               ),
+  //             ),
+  //             Text(
+  //               loginErr,
+  //               style: const TextStyle(
+  //                 color: Colors.red,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       padding: const EdgeInsets.symmetric(horizontal: 50),
+  //     ),
+  //   );
+  // }
 }
