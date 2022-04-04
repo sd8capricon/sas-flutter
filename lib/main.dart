@@ -20,6 +20,7 @@ class _MyAppState extends State<MyApp> {
     return const MaterialApp(
       title: 'SAS',
       home: Login(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

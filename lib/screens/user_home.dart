@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Pub Packages
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:charts_flutter/flutter.dart' as charts;
 
 // Components
 import 'package:sas/components/HodCourseDrawer.dart';
@@ -122,8 +124,75 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var lineData = [
+    LineAttendance(1, 90),
+    LineAttendance(2, 80),
+    LineAttendance(3, 20),
+    LineAttendance(4, 100),
+  ];
+  var donutData = [
+    DonutAttendance('present', 60, Colors.green),
+    DonutAttendance('absent', 40, Colors.red)
+  ];
+
   @override
   Widget build(BuildContext context) {
+    var lineSeries = [
+      charts.Series(
+        domainFn: (LineAttendance la, _) => la.lec, // x-axis
+        measureFn: (LineAttendance la, _) => la.att,
+        // colorFn: (LineAttendance la, _) => la.color,
+        data: lineData,
+        id: 'Attendance',
+      ),
+    ];
+
+    var donutSeries = [
+      charts.Series(
+        domainFn: (DonutAttendance pa, _) => pa.type,
+        measureFn: (DonutAttendance pa, _) => pa.att,
+        colorFn: (DonutAttendance pa, _) => pa.color,
+        labelAccessorFn: (DonutAttendance pa, _) => '${pa.type}\n${pa.att}',
+        data: donutData,
+        id: 'Attendance2',
+      ),
+    ];
+
+    var lineChart = charts.LineChart(
+      lineSeries,
+      animate: true,
+      defaultRenderer: charts.LineRendererConfig(includePoints: true),
+    );
+
+    var donutChart = charts.PieChart<String>(
+      donutSeries,
+      animate: true,
+      defaultRenderer: charts.ArcRendererConfig(
+        arcWidth: 60,
+        arcRendererDecorators: [
+          charts.ArcLabelDecorator(),
+        ],
+      ),
+    );
+
+    var lineChartWidget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 300,
+        height: 250,
+        child: lineChart,
+      ),
+    );
+
+    var donutChartWidget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 300,
+        height: 250,
+        child: donutChart,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Home'),
@@ -140,14 +209,28 @@ class _HomePageState extends State<HomePage> {
                 const Text('No Course Assigned')
               else
                 Text(widget.courseId.toString()),
-              // ElevatedButton(
-              //   onPressed: logOut,
-              //   child: const Text('Logout'),
-              // )
+              lineChartWidget,
+              donutChartWidget
             ],
           ),
         ],
       ),
     );
   }
+}
+
+class LineAttendance {
+  final int lec;
+  final double att;
+
+  LineAttendance(this.lec, this.att);
+}
+
+class DonutAttendance {
+  final String type;
+  final double att;
+  final charts.Color color;
+  DonutAttendance(this.type, this.att, Color color)
+      : color = charts.Color(
+            r: color.red, g: color.green, b: color.blue, a: color.alpha);
 }
