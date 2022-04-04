@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:sas/variables.dart';
 import 'package:flutter/material.dart';
 
 // Pub Packages
@@ -124,16 +125,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var lineData = [
-    LineAttendance(1, 90),
-    LineAttendance(2, 80),
-    LineAttendance(3, 20),
-    LineAttendance(4, 100),
-  ];
+  String err = '';
+  var lineData = [LineAttendance(0, 0)];
   var donutData = [
-    DonutAttendance('present', 60, Colors.green),
-    DonutAttendance('absent', 40, Colors.red)
+    DonutAttendance('present', 0, Colors.green),
+    DonutAttendance('absent', 0, Colors.red)
   ];
+
+  void getStat(int courseId) async {
+    final url = Uri.parse('$host/course-lec-stats/${widget.courseId}');
+    final res = await http.get(url);
+    var body = jsonDecode(res.body);
+    switch (res.statusCode) {
+      case 400:
+        break;
+      case 200:
+        double temp = double.parse(body['avg_course_attendance']);
+        setState(() {
+          lineData = [];
+          donutData = [];
+          for (var lec in body['lec_stats']) {
+            lineData
+                .add(LineAttendance(lec['lec_no'], lec['students_present']));
+          }
+          donutData.add(DonutAttendance('present', temp, Colors.lightGreen));
+          donutData
+              .add(DonutAttendance('absent', 100 - temp, Colors.redAccent));
+        });
+        break;
+      default:
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.courseId != 0) {
+      getStat(widget.courseId);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +223,27 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
+    if (widget.courseId == 0) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('User Home'),
+        ),
+        drawer:
+            widget.teacher['type'] == 'hod' ? const HodCourseDrawer() : null,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text('No Course Assigned'),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Home'),
@@ -201,18 +252,13 @@ class _HomePageState extends State<HomePage> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('User Home Page'),
-              if (widget.courseId == 0)
-                const Text('No Course Assigned')
-              else
-                Text(widget.courseId.toString()),
-              lineChartWidget,
-              donutChartWidget
-            ],
-          ),
+          if (err.isNotEmpty)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [lineChartWidget, donutChartWidget],
+            )
+          else
+            const Text('No lectures'),
         ],
       ),
     );
@@ -221,7 +267,7 @@ class _HomePageState extends State<HomePage> {
 
 class LineAttendance {
   final int lec;
-  final double att;
+  final int att;
 
   LineAttendance(this.lec, this.att);
 }
