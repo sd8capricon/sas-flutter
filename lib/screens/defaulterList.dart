@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 // Pub packages
 import 'package:http/http.dart' as http;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // Components
 import 'package:sas/components/HodHomeDrawer.dart';
@@ -20,22 +21,28 @@ class DefaulterList extends StatefulWidget {
 }
 
 class _DefaulterListState extends State<DefaulterList> {
+  bool isLoading = true;
   List defaulters = [];
 
   void getDefaulters() async {
-    final url = Uri.parse('$host/defaulters');
-    final res = await http.get(url);
-    var body = jsonDecode(res.body);
-    switch (res.statusCode) {
-      case 400:
-        print(body['error']);
-        break;
-      case 200:
-        setState(() {
-          defaulters = body;
-        });
-        break;
-      default:
+    if (mounted) {
+      final url = Uri.parse('$host/defaulters');
+      final res = await http.get(url);
+      var body = jsonDecode(res.body);
+      switch (res.statusCode) {
+        case 400:
+          print(body['error']);
+          break;
+        case 200:
+          setState(() {
+            defaulters = body;
+          });
+          break;
+        default:
+      }
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -48,6 +55,18 @@ class _DefaulterListState extends State<DefaulterList> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('User Home'),
+        ),
+        drawer: const HodDrawer(),
+        body: SpinKitDualRing(
+          color: Colors.blue,
+          size: spinnerSize,
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Defaultor List'),

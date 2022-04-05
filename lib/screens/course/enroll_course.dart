@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 // Pub packages
 import 'package:http/http.dart' as http;
 
+// Components
+import 'package:sas/components/Loader.dart';
+
 class EnrollCourse extends StatefulWidget {
   const EnrollCourse({Key? key}) : super(key: key);
 
@@ -13,6 +16,7 @@ class EnrollCourse extends StatefulWidget {
 }
 
 class _EnrollCourseState extends State<EnrollCourse> {
+  bool isLoading = true;
   final formKey = GlobalKey<FormState>();
   String err = '';
   int currTaughtBy = 0;
@@ -63,6 +67,7 @@ class _EnrollCourseState extends State<EnrollCourse> {
           }
         }
         currTaughtBy = teachers[0]['teacher_id'];
+        isLoading = false;
       });
     }
   }
@@ -104,6 +109,9 @@ class _EnrollCourseState extends State<EnrollCourse> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return loader;
+    }
     return Form(
       key: formKey,
       child: Column(

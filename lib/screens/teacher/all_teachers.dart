@@ -5,6 +5,9 @@ import 'package:sas/variables.dart';
 
 import 'package:http/http.dart' as http;
 
+// Components
+import 'package:sas/components/Loader.dart';
+
 class AllTeachers extends StatefulWidget {
   const AllTeachers({Key? key}) : super(key: key);
 
@@ -13,6 +16,7 @@ class AllTeachers extends StatefulWidget {
 }
 
 class _AllTeachersState extends State<AllTeachers> {
+  bool isLoading = true;
   List teachers = [];
 
   void getStudents() async {
@@ -21,6 +25,7 @@ class _AllTeachersState extends State<AllTeachers> {
     if (mounted) {
       setState(() {
         teachers = jsonDecode(res.body);
+        isLoading = false;
       });
     }
   }
@@ -34,6 +39,9 @@ class _AllTeachersState extends State<AllTeachers> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return loader;
+    }
     return FittedBox(
       alignment: Alignment.topLeft,
       child: DataTable(

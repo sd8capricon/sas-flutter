@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // Components
 import 'package:sas/components/HodHomeDrawer.dart';
@@ -116,6 +117,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isLoading = true;
   var avgAtt = 0.0;
   var barData = [BarAttendance('course', 0, Colors.red)];
   var donutData = [
@@ -127,7 +129,6 @@ class _HomePageState extends State<HomePage> {
     final url = Uri.parse('$host/all-course-stats');
     final res = await http.get(url);
     var body = jsonDecode(res.body);
-    print(body.runtimeType);
     if (mounted) {
       setState(() {
         barData = [];
@@ -144,6 +145,9 @@ class _HomePageState extends State<HomePage> {
         donutData.add(DonutAttendance('present', avgAtt, Colors.lightGreen));
         donutData
             .add(DonutAttendance('absent', 100 - avgAtt, Colors.redAccent));
+      });
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -211,7 +215,18 @@ class _HomePageState extends State<HomePage> {
         child: donutChart,
       ),
     );
-
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('User Home'),
+        ),
+        drawer: const HodDrawer(),
+        body: SpinKitDualRing(
+          color: Colors.blue,
+          size: spinnerSize,
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("HOD Home"),

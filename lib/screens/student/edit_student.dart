@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
+// Components
+import 'package:sas/components/Loader.dart';
+
 class EditStudent extends StatefulWidget {
   const EditStudent({Key? key}) : super(key: key);
 
@@ -13,6 +16,7 @@ class EditStudent extends StatefulWidget {
 }
 
 class _EditStudentState extends State<EditStudent> {
+  bool isLoading = true;
   final formKey = GlobalKey<FormState>();
   int currRoll = 1;
   List students = [];
@@ -59,6 +63,7 @@ class _EditStudentState extends State<EditStudent> {
         students = jsonDecode(res.body);
         currRoll = students[0]['roll_no'];
         setControllers(0);
+        isLoading = false;
       });
     }
   }
@@ -123,6 +128,9 @@ class _EditStudentState extends State<EditStudent> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return loader;
+    }
     return Form(
       key: formKey,
       child: Column(

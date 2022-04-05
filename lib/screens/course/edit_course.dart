@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 // Pub Packages
 import 'package:http/http.dart' as http;
 
+// Components
+import 'package:sas/components/Loader.dart';
+
 class EditCourse extends StatefulWidget {
   const EditCourse({Key? key}) : super(key: key);
 
@@ -14,6 +17,7 @@ class EditCourse extends StatefulWidget {
 }
 
 class _EditCourseState extends State<EditCourse> {
+  bool isLoading = true;
   final formKey = GlobalKey<FormState>();
   String err = '';
   int currCourse = 0;
@@ -54,6 +58,7 @@ class _EditCourseState extends State<EditCourse> {
 
   void dropDownCallBackCourse(var value) async {
     setState(() {
+      isLoading = true;
       currCourse = value!;
       for (var student in students) {
         student['isEnrolled'] = false;
@@ -133,6 +138,9 @@ class _EditCourseState extends State<EditCourse> {
         break;
       default:
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future getTeachers(String name) async {
@@ -211,6 +219,9 @@ class _EditCourseState extends State<EditCourse> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return loader;
+    }
     return Form(
       key: formKey,
       child: Column(

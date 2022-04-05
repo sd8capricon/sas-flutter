@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Components
+import 'package:sas/components/Loader.dart';
+
 class AlreadyExists implements Exception {
   String cause;
   AlreadyExists(this.cause);
@@ -20,6 +23,7 @@ class CreateAttendance extends StatefulWidget {
 
 class _CreateAttendanceState extends State<CreateAttendance> {
   var lecController = TextEditingController();
+  bool isLoading = true;
   int courseId = 0;
   List studentList = [];
   List absentStudents = [];
@@ -56,6 +60,9 @@ class _CreateAttendanceState extends State<CreateAttendance> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void mark() async {
@@ -122,6 +129,9 @@ class _CreateAttendanceState extends State<CreateAttendance> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return loader;
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(

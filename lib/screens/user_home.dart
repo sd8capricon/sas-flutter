@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // Components
 import 'package:sas/components/HodCourseDrawer.dart';
@@ -125,6 +126,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isLoading = true;
   String err = '';
   int courseId = 0;
   var lineData = [LineAttendance(0, 0)];
@@ -134,7 +136,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void getStat(int courseId) async {
-    print('run $courseId');
     final url = Uri.parse('$host/course-lec-stats/${widget.courseId}');
     final res = await http.get(url);
     var body = jsonDecode(res.body);
@@ -159,6 +160,9 @@ class _HomePageState extends State<HomePage> {
         break;
       default:
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -230,6 +234,19 @@ class _HomePageState extends State<HomePage> {
 
     // if (widget.courseId != 0) {
     // print(widget.courseId);
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('User Home'),
+        ),
+        drawer:
+            widget.teacher['type'] == 'hod' ? const HodCourseDrawer() : null,
+        body: SpinKitDualRing(
+          color: Colors.blue,
+          size: spinnerSize,
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Home'),

@@ -5,7 +5,6 @@ import 'package:sas/variables.dart';
 import 'package:http/http.dart' as http;
 
 // Components
-import 'package:sas/components/HodHomeDrawer.dart';
 
 class EmailDefaultor extends StatefulWidget {
   const EmailDefaultor({Key? key}) : super(key: key);

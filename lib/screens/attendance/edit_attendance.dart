@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Components
+import 'package:sas/components/Loader.dart';
+
 // Screens
 // import 'home.dart';
 
@@ -20,6 +23,7 @@ class EditAttendance extends StatefulWidget {
 }
 
 class _EditAttendanceState extends State<EditAttendance> {
+  bool isLoading = true;
   int courseId = 0;
   int currLec = 1;
   String message = '';
@@ -79,6 +83,7 @@ class _EditAttendanceState extends State<EditAttendance> {
     if (mounted) {
       setState(() {
         studentList = students['attendance'];
+        isLoading = false;
       });
     }
   }
@@ -119,6 +124,9 @@ class _EditAttendanceState extends State<EditAttendance> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return loader;
+    }
     if (lecs.isEmpty) {
       return AlertDialog(
         title: const Text('No Attendance to Edit !'),
